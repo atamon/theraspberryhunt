@@ -6,6 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The Hunt</title>
 
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
   <style>
     body {
       font-family: monospace;
@@ -19,6 +23,35 @@
       align-items: center;
 
       flex-direction: column;
+    }
+
+    .door {
+      margin: auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      font-size: 32px;
+    }
+
+    .door__input {
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      text-align: center;
+      outline: none;
+      border: none;
+      border-bottom: 2px solid black;
+      margin: 5px;
+
+      background: transparent !important;
+    }
+
+    .door__label {
+      display: inline-flex;
+      justify-content: center;
+
+      margin-right: 4px;
     }
 
   </style>
@@ -179,6 +212,54 @@
         </g>
       </g>
     </svg>
+
+    <div id="app"></div>
   </section>
+
+  <script type="text/babel" data-type="module" data-presets="react">
+    const { useEffect, useState } = React;
+
+    function Lucka({ disabled = false, label, expectedValue }) {
+      const [isCorrect, setIsCorrect] = useState(null);
+
+      const onChange = (e) => {
+        const value = e.target.value;
+        setIsCorrect(Number.parseInt(value) === expectedValue);
+      };
+
+      const style = {
+        color: null,
+        opacity: disabled ? 0.3 : 1
+      };
+
+      if (isCorrect === false) style.color = 'red';
+      if (isCorrect) style.color = 'green';
+
+      let value = null;
+      if (disabled) value = ';-*';
+
+      return (
+        <div className="door">
+          <span style={style} class="door__label">{label}</span>
+          <input disabled={disabled} class="door__input" type="text" onChange={onChange} value={value} />
+        </div>
+      );
+    }
+
+    function App() {
+      const [state, setState] = useState(Math.random() * 10);
+
+      return (
+        <React.Fragment>
+          <p>... men här är ett smakprov:</p>
+          <Lucka expectedValue={15} label={1} />
+          <Lucka disabled={true} expectedValue={3} label={2} />
+        </React.Fragment>
+      );
+    }
+
+    ReactDOM.render(<App />, document.getElementById('app'));
+  </script>
+
 </body>
 </html>
