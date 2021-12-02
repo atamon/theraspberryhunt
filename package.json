@@ -1,0 +1,29 @@
+{
+  "name": "theraspberryhunt",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/index.js",
+  "scripts": {
+    "start": "./node_modules/.bin/snowpack dev",
+    "build": "./node_modules/.bin/snowpack build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atamon/theraspberryhunt.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "snowpack": "3.8.8",
+    "uniforms": "3.6.2",
+    "uniforms-semantic": "3.6.2",
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
+  },
+  "bugs": {
+    "url": "https://github.com/atamon/theraspberryhunt/issues"
+  },
+  "homepage": "https://github.com/atamon/theraspberryhunt#readme"
+}

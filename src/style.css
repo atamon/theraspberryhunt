@@ -1,0 +1,59 @@
+body {
+  font-family: monospace;
+}
+
+.content {
+  min-height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  flex-direction: column;
+}
+
+.doors-list {
+  margin-top: 10px;
+}
+
+.door {
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 32px;
+
+  margin-left: -22px;
+}
+
+.door__input {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  text-align: center;
+  outline: none;
+  border: none;
+  border-bottom: 2px solid black;
+  margin: 5px;
+
+  background: transparent !important;
+}
+
+.door__label {
+  display: inline-flex;
+  justify-content: center;
+
+  margin-right: 4px;
+}
+
+.doors-list__header {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.doors-list__header .boat {
+  width: 50px;
+  height: 50px;
+  display: inline-flex;
+}
