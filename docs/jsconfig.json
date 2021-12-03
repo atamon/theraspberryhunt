@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "es2017",
+    "noEmit": true,
+    "jsx": "preserve",
+    "checkJs": true
+  },
+  "exclude": [
+    "./node_modules",
+    "**/*.bundle.js"
+  ]
+}
