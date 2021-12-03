@@ -16,9 +16,14 @@ module.exports = {
     /* ... */
   },
   buildOptions: {
+    metaUrlPath: 'snowpack',
+    out: 'docs'
+  },
+  optimize: {
+    bundle: true
   },
   exclude: [
-    'node_modules',
-    '.git'
+    '**/node_modules/**',
+    '**/.git/**'
   ]
 };
