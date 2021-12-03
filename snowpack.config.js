@@ -16,7 +16,6 @@ module.exports = {
     /* ... */
   },
   buildOptions: {
-    
   },
   exclude: [
     'node_modules',
