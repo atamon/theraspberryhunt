@@ -44,6 +44,6 @@ body {
   width: 50px;
   height: 50px;
   display: inline-flex;
-  background-image: url(./src/boat.png);
+  background-image: url(./boat.png);
   background-size: contain;
 }
