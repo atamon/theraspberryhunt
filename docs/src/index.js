@@ -7352,12 +7352,9 @@ function AvatarDefault() {
 }
 
 // docs/src/Boat.js
-import boat from "./boat.png";
 function Boat({colors = true}) {
   const style = {
-    filter: colors ? "" : "grayscale(100%)",
-    backgroundImage: `url(${boat})`,
-    backgroundSize: "contain"
+    filter: colors ? "" : "grayscale(100%)"
   };
   return /* @__PURE__ */ react.createElement("div", {
     style,
