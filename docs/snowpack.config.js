@@ -17,7 +17,8 @@ module.exports = {
   },
   buildOptions: {
     metaUrlPath: 'snowpack',
-    out: 'docs'
+    out: 'docs',
+    baseUrl: 'theraspberryhunt'
   },
   optimize: {
     bundle: true
