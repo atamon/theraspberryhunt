@@ -18,8 +18,13 @@ function IntroText({ dayOfMonth }) {
 
 function App() {
   const dayOfMonth = new Date().getDate();
-  const [correctDates, setCorrectDates] = useState({});
-  const nCorrectDates = Object.values(correctDates).reduce((memo, isCorrect) => memo + isCorrect, 0);
+  const [correctDates, setCorrectDates] = useState({ '0': true });
+
+  /** @type {number} */
+  const nCorrectDates = Object.values(correctDates).reduce((memo, isCorrect) => {
+    if (isCorrect) return memo + 1;
+    else return memo;
+  }, 0);
 
   const doors = data.map((item, index) => {
 
@@ -29,7 +34,12 @@ function App() {
       }));
     };
 
-    return <Door disabled={dayOfMonth < Number.parseInt(item.label)} key={index} item={item} reportIsCorrect={reportIsCorrect} />
+    const doorMonthDate = Number.parseInt(item.label);
+    const doorNotOpen = dayOfMonth < doorMonthDate;
+    const prevDoorNotCorrect = !correctDates[`${doorMonthDate - 1}`];
+    const isDisabled = doorNotOpen || prevDoorNotCorrect;
+
+    return <Door disabled={isDisabled} key={index} item={item} reportIsCorrect={reportIsCorrect} />
   });
 
   return (
