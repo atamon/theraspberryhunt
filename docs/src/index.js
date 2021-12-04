@@ -7388,8 +7388,8 @@ var data_default = [
   {
     label: "4",
     expectedValues: {
-      nRed: 0,
-      nBlack: 0
+      nRed: 96,
+      nBlack: 33
     }
   },
   {
