@@ -7362,12 +7362,109 @@ function Boat({colors = true}) {
   });
 }
 
+// docs/src/Door.js
+function useStoredValue({storageKey}) {
+  const [value, setValue] = useState(window.localStorage.getItem(storageKey) || "");
+  const storeAndSetValue = (v) => {
+    window.localStorage.setItem(storageKey, v);
+    setValue(v);
+  };
+  return [value, storeAndSetValue];
+}
+function Input({storageKey, disabled = false, expectedValue = 0, setIsCorrect}) {
+  const [value, setValue] = useStoredValue({storageKey});
+  const onChange = (e) => {
+    const value2 = e.target.value;
+    setValue(value2);
+  };
+  useEffect(() => {
+    setIsCorrect(Number.parseInt(value) === expectedValue);
+  }, [value]);
+  const style = {
+    opacity: disabled ? 0.3 : 1
+  };
+  const isCorrect = Number.parseInt(value) === expectedValue;
+  if (!isCorrect && value !== "")
+    style.borderColor = "red";
+  if (isCorrect)
+    style.borderColor = "green";
+  return /* @__PURE__ */ react.createElement("input", {
+    style,
+    disabled,
+    className: "door__input",
+    type: "text",
+    onChange: (e) => onChange(e),
+    value
+  });
+}
+function Door({disabled, item, reportIsCorrect}) {
+  const [isRedCorrect, setIsRedCorrect] = useState(false);
+  const [isBlackCorrect, setIsBlackCorrect] = useState(false);
+  const isCorrect = isRedCorrect && isBlackCorrect;
+  useEffect(() => {
+    reportIsCorrect(isCorrect);
+  }, [isCorrect]);
+  const style = {
+    color: void 0
+  };
+  if (isCorrect)
+    style.color = "green";
+  return /* @__PURE__ */ react.createElement("div", {
+    className: "door"
+  }, /* @__PURE__ */ react.createElement("span", {
+    style,
+    className: "door__label"
+  }, item.label), /* @__PURE__ */ react.createElement(Input, {
+    storageKey: `${item.label}:red`,
+    disabled,
+    setIsCorrect: setIsRedCorrect,
+    expectedValue: item.expectedValues.nRed
+  }), /* @__PURE__ */ react.createElement(Input, {
+    storageKey: `${item.label}:black`,
+    disabled,
+    setIsCorrect: setIsBlackCorrect,
+    expectedValue: item.expectedValues.nBlack
+  }));
+}
+
+// docs/src/SheetData.js
+var SheetData = class {
+  constructor({url, baseData}) {
+    this.url = url;
+    this.baseData = baseData;
+  }
+  async getData() {
+    const res = await fetch(this.url);
+    const csv = await res.text();
+    const map = new Map();
+    csv.split("\n").forEach((line) => {
+      const [label, red, black] = line.split(",");
+      map.set(label, {
+        nRed: Number.parseInt(red),
+        nBlack: Number.parseInt(black)
+      });
+    });
+    return this.baseData.map((door) => {
+      const values = map.get(door.label);
+      if (!values)
+        return door;
+      return Object.assign({}, door, {
+        expectedValues: {
+          nRed: values.nRed,
+          nBlack: values.nBlack
+        }
+      });
+    });
+  }
+};
+var SheetData_default = SheetData;
+
 // docs/src/data.js
 var data_default = [
   {
     label: "1",
     expectedValues: {
-      nRed: 15,
+      nRed: 0,
       nBlack: 0
     }
   },
@@ -7388,8 +7485,8 @@ var data_default = [
   {
     label: "4",
     expectedValues: {
-      nRed: 96,
-      nBlack: 33
+      nRed: 0,
+      nBlack: 0
     }
   },
   {
@@ -7534,71 +7631,6 @@ var data_default = [
   }
 ];
 
-// docs/src/Door.js
-function useStoredValue({storageKey}) {
-  const [value, setValue] = useState(window.localStorage.getItem(storageKey) || "");
-  const storeAndSetValue = (v) => {
-    window.localStorage.setItem(storageKey, v);
-    setValue(v);
-  };
-  return [value, storeAndSetValue];
-}
-function Input({storageKey, disabled = false, expectedValue = 0, setIsCorrect}) {
-  const [value, setValue] = useStoredValue({storageKey});
-  const onChange = (e) => {
-    const value2 = e.target.value;
-    setValue(value2);
-  };
-  useEffect(() => {
-    setIsCorrect(Number.parseInt(value) === expectedValue);
-  }, [value]);
-  const style = {
-    opacity: disabled ? 0.3 : 1
-  };
-  const isCorrect = Number.parseInt(value) === expectedValue;
-  if (!isCorrect && value !== "")
-    style.borderColor = "red";
-  if (isCorrect)
-    style.borderColor = "green";
-  return /* @__PURE__ */ react.createElement("input", {
-    style,
-    disabled,
-    className: "door__input",
-    type: "text",
-    onChange: (e) => onChange(e),
-    value
-  });
-}
-function Door({disabled, item, reportIsCorrect}) {
-  const [isRedCorrect, setIsRedCorrect] = useState(false);
-  const [isBlackCorrect, setIsBlackCorrect] = useState(false);
-  const isCorrect = isRedCorrect && isBlackCorrect;
-  useEffect(() => {
-    reportIsCorrect(isCorrect);
-  }, [isCorrect]);
-  const style = {
-    color: void 0
-  };
-  if (isCorrect)
-    style.color = "green";
-  return /* @__PURE__ */ react.createElement("div", {
-    className: "door"
-  }, /* @__PURE__ */ react.createElement("span", {
-    style,
-    className: "door__label"
-  }, item.label), /* @__PURE__ */ react.createElement(Input, {
-    storageKey: `${item.label}:red`,
-    disabled,
-    setIsCorrect: setIsRedCorrect,
-    expectedValue: item.expectedValues.nRed
-  }), /* @__PURE__ */ react.createElement(Input, {
-    storageKey: `${item.label}:black`,
-    disabled,
-    setIsCorrect: setIsBlackCorrect,
-    expectedValue: item.expectedValues.nBlack
-  }));
-}
-
 // docs/src/index.js
 function IntroText({dayOfMonth}) {
   const daysUntilXMas = 24 - dayOfMonth;
@@ -7606,7 +7638,7 @@ function IntroText({dayOfMonth}) {
     className: "days-until-xmas"
   }, daysUntilXMas), " dagar kvar till jul...");
 }
-function App() {
+function App({data}) {
   const dayOfMonth = new Date().getDate();
   const [correctDates, setCorrectDates] = useState({"0": true});
   const nCorrectDates = Object.values(correctDates).reduce((memo2, isCorrect) => {
@@ -7615,7 +7647,7 @@ function App() {
     else
       return memo2;
   }, 0);
-  const doors = data_default.map((item, index) => {
+  const doors = data.map((item, index) => {
     const reportIsCorrect = (isCorrect) => {
       setCorrectDates((correctDates2) => Object.assign({}, correctDates2, {
         [item.label]: isCorrect
@@ -7644,8 +7676,15 @@ function App() {
     colors: false
   })), doors));
 }
-function init() {
-  render$1(/* @__PURE__ */ react.createElement(App, null), document.getElementById("app"));
+async function init() {
+  const sheetData = new SheetData_default({
+    url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vS75Nu0iwLEzmV44rgPgcg3wzE3VlWPRfqar1pTQSX4GTU7TOr1UkwqyTUNe9aTyPv9QQ4sfiFluRD3/pub?output=csv",
+    baseData: data_default
+  });
+  const data = await sheetData.getData();
+  render$1(/* @__PURE__ */ react.createElement(App, {
+    data
+  }), document.getElementById("app"));
 }
 init();
 //# sourceMappingURL=index.js.map
