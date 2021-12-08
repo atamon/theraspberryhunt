@@ -7535,13 +7535,23 @@ var data_default = [
 ];
 
 // docs/src/Door.js
-function Input({disabled = false, expectedValue = 0, setIsCorrect}) {
-  const [value, setValue] = useState("");
+function useStoredValue({storageKey}) {
+  const [value, setValue] = useState(window.localStorage.getItem(storageKey) || "");
+  const storeAndSetValue = (v) => {
+    window.localStorage.setItem(storageKey, v);
+    setValue(v);
+  };
+  return [value, storeAndSetValue];
+}
+function Input({storageKey, disabled = false, expectedValue = 0, setIsCorrect}) {
+  const [value, setValue] = useStoredValue({storageKey});
   const onChange = (e) => {
     const value2 = e.target.value;
     setValue(value2);
-    setIsCorrect(Number.parseInt(value2) === expectedValue);
   };
+  useEffect(() => {
+    setIsCorrect(Number.parseInt(value) === expectedValue);
+  }, [value]);
   const style = {
     opacity: disabled ? 0.3 : 1
   };
@@ -7577,10 +7587,12 @@ function Door({disabled, item, reportIsCorrect}) {
     style,
     className: "door__label"
   }, item.label), /* @__PURE__ */ react.createElement(Input, {
+    storageKey: `${item.label}:red`,
     disabled,
     setIsCorrect: setIsRedCorrect,
     expectedValue: item.expectedValues.nRed
   }), /* @__PURE__ */ react.createElement(Input, {
+    storageKey: `${item.label}:black`,
     disabled,
     setIsCorrect: setIsBlackCorrect,
     expectedValue: item.expectedValues.nBlack
@@ -7605,7 +7617,7 @@ function App() {
   }, 0);
   const doors = data_default.map((item, index) => {
     const reportIsCorrect = (isCorrect) => {
-      setCorrectDates(Object.assign({}, correctDates, {
+      setCorrectDates((correctDates2) => Object.assign({}, correctDates2, {
         [item.label]: isCorrect
       }));
     };
