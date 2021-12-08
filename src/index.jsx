@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { render } from 'react-dom';
 import { AvatarDefault } from './Avatar';
 import Boat from './Boat';
-import data from './data';
 import Door from './Door';
+import SheetData from './SheetData';
+import baseData from './data';
 
 import './style.css';
 
@@ -16,7 +17,7 @@ function IntroText({ dayOfMonth }) {
   );
 }
 
-function App() {
+function App({ data }) {
   const dayOfMonth = new Date().getDate();
   const [correctDates, setCorrectDates] = useState({ '0': true });
 
@@ -57,8 +58,15 @@ function App() {
   );
 }
 
-function init() {
-  render(<App />, document.getElementById('app'));
+async function init() {
+  const sheetData = new SheetData({
+    url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS75Nu0iwLEzmV44rgPgcg3wzE3VlWPRfqar1pTQSX4GTU7TOr1UkwqyTUNe9aTyPv9QQ4sfiFluRD3/pub?output=csv',
+    baseData
+  });
+
+  const data = await sheetData.getData();
+
+  render(<App data={data} />, document.getElementById('app'));
 }
 
 init();

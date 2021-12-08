@@ -9,7 +9,7 @@ export default [
   {
     label: '1',
     expectedValues: {
-      nRed: 15,
+      nRed: 0,
       nBlack: 0
     }
   },
@@ -30,8 +30,8 @@ export default [
   {
     label: '4',
     expectedValues: {
-      nRed: 96,
-      nBlack: 33
+      nRed: 0,
+      nBlack: 0
     }
   },
   {
