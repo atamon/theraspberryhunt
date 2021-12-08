@@ -29,7 +29,7 @@ function App() {
   const doors = data.map((item, index) => {
 
     const reportIsCorrect = (/** @type {boolean} */ isCorrect) => {
-      setCorrectDates(Object.assign({}, correctDates, {
+      setCorrectDates(correctDates => Object.assign({}, correctDates, {
         [item.label]: isCorrect
       }));
     };

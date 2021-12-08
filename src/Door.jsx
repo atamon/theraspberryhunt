@@ -1,13 +1,27 @@
 import React, { useEffect, useState } from 'react';
 
-function Input({ disabled = false, expectedValue = 0, setIsCorrect }) {
-  const [value, setValue] = useState('');
+function useStoredValue({ storageKey }) {
+  const [value, setValue] = useState(window.localStorage.getItem(storageKey) || '');
+
+  const storeAndSetValue = (v) => {
+    window.localStorage.setItem(storageKey, v);
+    setValue(v);
+  };
+
+  return [value, storeAndSetValue];
+}
+
+function Input({ storageKey, disabled = false, expectedValue = 0, setIsCorrect }) {
+  const [value, setValue] = useStoredValue({ storageKey });
 
   const onChange = (/** @type {React.ChangeEvent<HTMLInputElement>} */ e) => {
     const value = e.target.value;
     setValue(value);
-    setIsCorrect(Number.parseInt(value) === expectedValue)
   };
+
+  useEffect(() => {
+    setIsCorrect(Number.parseInt(value) === expectedValue)
+  }, [value]);
 
   /** @type {React.CSSProperties} */
   const style = {
@@ -51,8 +65,8 @@ export default function Door({ disabled, item, reportIsCorrect }) {
   return (
     <div className="door">
       <span style={style} className="door__label">{item.label}</span>
-      <Input disabled={disabled} setIsCorrect={setIsRedCorrect} expectedValue={item.expectedValues.nRed} />
-      <Input disabled={disabled} setIsCorrect={setIsBlackCorrect} expectedValue={item.expectedValues.nBlack} />
+      <Input storageKey={`${item.label}:red`} disabled={disabled} setIsCorrect={setIsRedCorrect} expectedValue={item.expectedValues.nRed} />
+      <Input storageKey={`${item.label}:black`} disabled={disabled} setIsCorrect={setIsBlackCorrect} expectedValue={item.expectedValues.nBlack} />
     </div>
   );
 }
