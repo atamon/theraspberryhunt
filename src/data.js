@@ -58,8 +58,8 @@ export default [
   {
     label: '8',
     expectedValues: {
-      nRed: 0,
-      nBlack: 0
+      nRed: 11,
+      nBlack: 8
     }
   },
   {
